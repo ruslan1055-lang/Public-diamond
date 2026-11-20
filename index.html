@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Название проекта</title>
+<style>
+:root{
+  --bg:#f5f5f7; --surface:#ffffff; --text:#1d1d1f; --muted:#86868b;
+  --mi:#ff6900; --mi-dark:#e65f00; --line:#e8e8ed; --shadow:0 8px 30px rgba(0,0,0,.08);
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0c0c0d; --surface:#1a1a1c; --text:#f5f5f7; --muted:#8e8e93; --line:#2c2c2e; --shadow:0 8px 30px rgba(0,0,0,.5);}
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:"Inter","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+
+/* Верхняя панель */
+.topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:14px;padding:12px 20px;padding-top:calc(12px + env(safe-area-inset-top,0px));background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.logo{width:36px;height:36px;border-radius:10px;background:var(--mi);color:#fff;display:grid;place-items:center;font-weight:800;font-size:18px}
+.brand{font-weight:700;font-size:17px;flex:1}
+
+/* Бургер */
+.burger{width:44px;height:44px;border:0;border-radius:14px;background:var(--surface);box-shadow:var(--shadow);cursor:pointer;display:grid;place-content:center;gap:5px;transition:background .2s}
+.burger span{display:block;width:20px;height:2.5px;border-radius:2px;background:var(--text);transition:transform .3s,opacity .2s}
+.burger[aria-expanded="true"]{background:var(--mi)}
+.burger[aria-expanded="true"] span{background:#fff}
+.burger[aria-expanded="true"] span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+.burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+.burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+.burger:focus-visible,.mi-btn:focus-visible,.menu a:focus-visible{outline:3px solid var(--mi);outline-offset:3px}
+
+/* Меню */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .3s;z-index:20}
+.overlay.open{opacity:1;pointer-events:auto}
+.menu{position:fixed;top:0;right:0;bottom:0;width:min(340px,86vw);background:var(--surface);z-index:25;padding:90px 20px 24px;display:flex;flex-direction:column;gap:12px;transform:translateX(105%);transition:transform .35s cubic-bezier(.2,.8,.2,1);box-shadow:var(--shadow)}
+.menu.open{transform:none}
+.menu a{display:block;padding:16px 22px;border-radius:999px;background:var(--bg);color:var(--text);text-decoration:none;font-weight:600;transition:background .2s,color .2s,transform .15s}
+.menu a:hover,.menu a.active{background:var(--mi);color:#fff}
+.menu a:active{transform:scale(.97)}
+
+/* Кнопки в стиле Xiaomi */
+.mi-btn{display:inline-flex;align-items:center;justify-content:center;min-width:160px;padding:14px 34px;border:0;border-radius:999px;background:var(--mi);color:#fff;font:700 16px/1 inherit;cursor:pointer;transition:background .2s,transform .15s,box-shadow .2s;box-shadow:0 6px 18px rgba(255,105,0,.35)}
+.mi-btn:hover{background:var(--mi-dark)}
+.mi-btn:active{transform:scale(.96)}
+.mi-btn.ghost{background:transparent;color:var(--mi);box-shadow:inset 0 0 0 2px var(--mi)}
+.mi-btn.ghost:hover{background:var(--mi);color:#fff}
+
+/* Контент */
+main{max-width:820px;margin:0 auto;padding:36px 20px 80px}
+.hero{padding:40px 0 20px}
+.hero h1{font-size:clamp(32px,6vw,52px);line-height:1.1;letter-spacing:-.02em;min-height:1.1em}
+.hero p{margin-top:14px;color:var(--muted);max-width:56ch;min-height:1.6em}
+.hero .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+
+section{display:none;background:var(--surface);border-radius:28px;padding:32px;margin-top:28px;box-shadow:var(--shadow)}
+section.show{display:block;animation:pop .3s ease}
+section .back{margin-top:26px}
+.hero.hidden{display:none}
+@keyframes pop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+section h2{font-size:26px;margin-bottom:6px}
+section .sub{color:var(--muted);margin-bottom:22px;min-height:1.6em}
+.field{border:2px dashed var(--line);border-radius:18px;padding:18px 20px;margin-top:12px;color:var(--muted);min-height:64px}
+.field b{display:block;color:var(--text);font-size:15px;margin-bottom:2px}
+.field:empty::before{content:"Пусто"}
+footer{text-align:center;color:var(--muted);font-size:14px;padding:30px 20px calc(30px + env(safe-area-inset-bottom,0px))}
+@media(max-width:520px){section{padding:24px 20px;border-radius:24px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+a.blue{color:#0a6cff;font-weight:600;text-decoration:none;border-bottom:1.5px solid rgba(10,108,255,.3)}
+a.blue:hover{border-bottom-color:#0a6cff}
+@media(prefers-color-scheme:dark){a.blue{color:#5aa2ff}}
+.pt{display:flex;gap:16px;padding:20px;margin-top:14px;border-radius:22px;background:var(--bg)}
+.pt .n{flex:none;width:36px;height:36px;border-radius:50%;background:var(--mi);color:#fff;font-weight:800;display:grid;place-items:center}
+.pt .t{min-width:0}
+.pt p+p,.pt p+.tut,.pt p+.warn{margin-top:10px}
+.warn{padding:14px 18px;border-radius:16px;background:rgba(255,105,0,.12);border-left:4px solid var(--mi);font-weight:700}
+.tut{padding:14px 18px;border-radius:16px;background:var(--surface);box-shadow:inset 0 0 0 1.5px var(--line)}
+.tut b{color:var(--mi)}
+.contact{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;padding:20px;margin-top:14px;border-radius:22px;background:var(--bg)}
+.contact small{display:block;color:var(--muted)}
+.contact .mi-btn{min-width:0;padding:12px 26px;text-decoration:none;font-size:15px}
+.caps{font-weight:700}
+
+.hero{position:relative;overflow:hidden;border-radius:36px;padding:48px 32px;margin-top:6px;background:linear-gradient(135deg,#ff6900 0%,#ff9a3c 55%,#ffc46b 100%);color:#fff}
+.hero::after{content:"💎";position:absolute;right:-10px;bottom:-30px;font-size:190px;opacity:.22;transform:rotate(12deg);pointer-events:none}
+.hero h1{position:relative;font-size:clamp(34px,7vw,56px)}
+.hero p{position:relative;color:rgba(255,255,255,.92);font-size:17px;max-width:46ch}
+.hero .actions{position:relative}
+.hero .mi-btn{background:#fff;color:var(--mi);box-shadow:0 8px 22px rgba(0,0,0,.18);text-decoration:none}
+.hero .mi-btn:hover{background:#fff4ea}
+.hero .mi-btn.ghost{background:transparent;color:#fff;box-shadow:inset 0 0 0 2px #fff}
+.hero .mi-btn.ghost:hover{background:#fff;color:var(--mi)}
+.grp{font-size:18px;font-weight:800;margin:30px 0 4px}
+.grp+.note{color:var(--muted);font-size:14px;margin-bottom:6px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-top:12px}
+.tile{display:flex;gap:14px;align-items:flex-start;padding:16px;border-radius:22px;background:var(--bg)}
+.tile .ic{flex:none;width:48px;height:48px;border-radius:16px;display:grid;place-items:center;font-size:24px;background:var(--c,var(--mi));box-shadow:0 5px 14px color-mix(in srgb,var(--c,var(--mi)) 45%,transparent)}
+.tile b{display:block;line-height:1.25}
+.tile span{display:block;color:var(--muted);font-size:14px;margin-top:3px;line-height:1.45}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.stat{padding:16px 10px;border-radius:22px;background:var(--bg);text-align:center}
+.stat b{display:block;font-size:22px;color:var(--mi)}
+.stat span{font-size:13px;color:var(--muted)}
+.lg{display:flex;justify-content:space-between;gap:10px;padding:12px 18px;margin-top:8px;border-radius:999px;background:var(--bg);font-size:15px}
+.lg small{color:var(--muted)}
+.lg i{font-style:normal;font-weight:700}
+@media(max-width:520px){.hero{padding:34px 22px;border-radius:30px}.stats{grid-template-columns:1fr}}
+
+details.tile{display:block;padding:0;cursor:default;transition:box-shadow .2s}
+details.tile>summary{display:flex;gap:14px;align-items:flex-start;padding:16px 44px 16px 16px;list-style:none;cursor:pointer;position:relative;border-radius:22px}
+details.tile>summary::-webkit-details-marker{display:none}
+details.tile>summary::after{content:"";position:absolute;right:18px;top:24px;width:9px;height:9px;border-right:2.5px solid var(--mi);border-bottom:2.5px solid var(--mi);transform:rotate(45deg);transition:transform .25s}
+details.tile[open]>summary::after{transform:rotate(-135deg);top:28px}
+details.tile[open]{grid-column:1/-1;box-shadow:inset 0 0 0 2px var(--mi)}
+details.tile>summary:focus-visible{outline:3px solid var(--mi);outline-offset:2px}
+.perks{list-style:none;padding:2px 18px 18px;display:grid;gap:8px;animation:pop .25s ease}
+.perks li{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:16px;background:var(--surface)}
+.perks li i{font-style:normal;flex:none;width:30px;height:30px;border-radius:10px;background:rgba(255,105,0,.12);display:grid;place-items:center;font-size:16px}
+.perks li div{font-size:14.5px;line-height:1.45}
+.perks li b{display:block;font-size:15px}
+.perks li span{color:var(--muted)}
+.hint{color:var(--muted);font-size:14px;margin:4px 0 0}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">M</div>
+  <div class="brand">Название проекта</div>
+  <button class="burger" id="burger" aria-label="Открыть меню" aria-expanded="false" aria-controls="menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div class="overlay" id="overlay"></div>
+<nav class="menu" id="menu" aria-label="Главное меню">
+  <a href="#about">Объяснение</a>
+  <a href="#rules">Правила</a>
+  <a href="#privacy">Конфиденциальность</a>
+  <a href="#contacts">Контакты</a>
+</nav>
+
+<main>
+  <div class="hero">
+    <h1>Diamond clicker</h1>
+    <p>Развлекательная игра: кликай по алмазу, прокачивай лигу, выполняй задания и копи внутриигровую валюту.</p>
+    <div class="actions">
+      <a class="mi-btn" href="https://ruslan1055-lang.github.io/Diamond-clicker-/" target="_blank" rel="noopener">Играть</a>
+      <button class="mi-btn ghost" onclick="show('about')">Как это работает</button>
+    </div>
+  </div>
+
+  <section id="about">
+    <h2>Объяснение</h2>
+    <p class="sub">Что делает каждая кнопка в Diamond clicker</p>
+
+    <div class="grp">Главный экран</div><p class="hint">Нажми на карточку, чтобы увидеть подробности.</p><div class="tiles"><details class="tile" style="--c:#00b4ff"><summary><div class="ic">💎</div><div><b>Алмаз по центру</b><span>Главная кнопка игры. Нажимай, чтобы зарабатывать.</span></div></summary><ul class="perks"><li><i>👆</i><div><b>Каждый тап приносит награду</b><span>Клик даёт 💎 и опыт ⚡. С MAX награда за клик удваивается.</span></div></li><li><i>🔋</i><div><b>Тратит батарею</b><span>Один тап стоит 1 заряд батареи. Пока батарея не пуста, можно кликать.</span></div></li><li><i>🏅</i><div><b>Двигает лигу</b><span>Количество кликов определяет уровень и лигу.</span></div></li></ul></details><details class="tile" style="--c:#1ab0ff"><summary><div class="ic">💎</div><div><b>Алмазы</b><span>Основная валюта игры.</span></div></summary><ul class="perks"><li><i>👆</i><div><b>Приходят за клики</b><span>Основной способ заработка: нажимай на алмаз.</span></div></li><li><i>🏆</i><div><b>Награда за уровни</b><span>Каждый новый уровень приносит от 100 до 1 500 💎.</span></div></li><li><i>💸</i><div><b>Можно вывести</b><span>Алмазы выводятся через кнопку «Вывод» и участвуют в покупках усилителей.</span></div></li></ul></details><details class="tile" style="--c:#ff2850"><summary><div class="ic">❤️</div><div><b>Рубины</b><span>Дополнительная валюта.</span></div></summary><ul class="perks"><li><i>ℹ️</i><div><b>Описание в игре</b><span>Нажми на значок рубинов вверху экрана, и игра откроет подробное описание.</span></div></li></ul></details><details class="tile" style="--c:#ff9d00"><summary><div class="ic">⚡</div><div><b>Опыт (XP)</b><span>Он же «молнии». Копится за клики.</span></div></summary><ul class="perks"><li><i>🛒</i><div><b>Платит за покупки</b><span>Молнии тратятся в магазине, на акциях и в рулетках.</span></div></li><li><i>🎰</i><div><b>Цена спина</b><span>Классическая рулетка 850 ⚡, VIP рулетка 10 000 ⚡, Неоновая 5 000 ⚡.</span></div></li><li><i>✨</i><div><b>Множители</b><span>Усилители из «Бонусов» увеличивают получаемый опыт.</span></div></li></ul></details><details class="tile" style="--c:#f5b800"><summary><div class="ic">✨</div><div><b>Множитель XP</b><span>Показывает, во сколько раз больше опыта за клик.</span></div></summary><ul class="perks"><li><i>💫</i><div><b>Х1.5 на 15 минут</b><span>Полтора опыта за клики, стоит 163 💎.</span></div></li><li><i>🔥</i><div><b>Х2 на 30 минут</b><span>Двойной опыт за клики, стоит 325 💎.</span></div></li><li><i>🚀</i><div><b>Х3 на 10 минут</b><span>Тройной опыт на 10 минут, стоит 195 💎.</span></div></li><li><i>🌟</i><div><b>Х3 на 1 час бесплатно</b><span>Доступен бесплатно раз в 24 часа.</span></div></li></ul></details><details class="tile" style="--c:#8a5cf6"><summary><div class="ic">👑</div><div><b>MAX</b><span>Подписка с максимальными привилегиями.</span></div></summary><ul class="perks"><li><i>💎</i><div><b>×2 к награде за клик</b><span>Удваивает алмазы с каждого клика.</span></div></li><li><i>⚡</i><div><b>×3 к молниям</b><span>Утраивает получаемые молнии.</span></div></li><li><i>🎁</i><div><b>×2 ежедневные награды</b><span>Все ежедневные награды увеличены вдвое.</span></div></li><li><i>💸</i><div><b>Комиссия вывода ÷2</b><span>Все комиссии на вывод снижены в 2 раза.</span></div></li><li><i>📈</i><div><b>×2 лимиты выводов</b><span>40 выводов в день вместо 20.</span></div></li><li><i>🔋</i><div><b>Батарея 2 000 и ×3 реген</b><span>Запас 2 000 и восстановление +3 каждые 5 секунд.</span></div></li><li><i>🎨</i><div><b>15+ эксклюзивных тем</b><span>Уникальные атмосферы интерфейса.</span></div></li><li><i>🎟️</i><div><b>Эксклюзивные промокоды</b><span>MAX открывает секретные промокоды с наградами.</span></div></li></ul></details><details class="tile" style="--c:#00c8ff"><summary><div class="ic">🔋</div><div><b>Батарея</b><span>Запас твоих тапов.</span></div></summary><ul class="perks"><li><i>➖</i><div><b>−1 за каждый тап</b><span>Каждый клик расходует один заряд.</span></div></li><li><i>🕐</i><div><b>Без MAX</b><span>Запас до 500, восстановление +1 каждые 5 секунд.</span></div></li><li><i>⭐</i><div><b>С MAX</b><span>Запас до 2 000, восстановление +3 каждые 5 секунд.</span></div></li><li><i>🔌</i><div><b>Мгновенная подзарядка</b><span>В «Бонусах» можно полностью восстановить батарею за 618 💎.</span></div></li><li><i>👀</i><div><b>Подробности</b><span>Нажми на полоску батареи, чтобы увидеть детали.</span></div></li></ul></details><details class="tile" style="--c:#cd7f32"><summary><div class="ic">🏅</div><div><b>Уровень и лига</b><span>Полоска прогресса под батареей.</span></div></summary><ul class="perks"><li><i>📊</i><div><b>Зависит от кликов</b><span>Лига растёт вместе с количеством кликов. Всего 8 лиг и 40 уровней.</span></div></li><li><i>💎</i><div><b>Награда за уровень</b><span>От 100 💎 на первом уровне до 1 500 на высоких.</span></div></li><li><i>🛡️</i><div><b>Таблица лиг</b><span>Полная таблица с числом кликов ниже, в блоке «Лиги».</span></div></li></ul></details><details class="tile" style="--c:#ffd23f"><summary><div class="ic">🎰</div><div><b>VIP рулетка</b><span>Кнопка под лигой.</span></div></summary><ul class="perks"><li><i>🎡</i><div><b>Крутится за 10 000 ⚡</b><span>Один спин стоит 10 000 молний.</span></div></li><li><i>📍</i><div><b>Всегда под рукой</b><span>Находится прямо на главном экране, под полоской лиги.</span></div></li></ul></details><details class="tile" style="--c:#6b7280"><summary><div class="ic">❓</div><div><b>FAQ</b><span>Справка прямо в игре.</span></div></summary><ul class="perks"><li><i>📖</i><div><b>Три вкладки</b><span>Лиги, Батарея и Кнопки: коротко обо всём, что описано здесь.</span></div></li></ul></details></div><div class="grp">Нижнее меню</div><div class="tiles"><details class="tile" style="--c:#2fbf5b"><summary><div class="ic">💸</div><div><b>Вывод</b><span>Заявка на вывод заработанных 💎.</span></div></summary><ul class="perks"><li><i>📝</i><div><b>Заявка на выплату</b><span>Вывод не мгновенный: заявку нужно подождать. Чем чаще писать владельцу, тем дольше ждать.</span></div></li><li><i>🔄</i><div><b>Четыре вкладки</b><span>Вывод, Обмен, GOLD и CABS. Часть вкладок может быть на профилактике.</span></div></li><li><i>🔒</i><div><b>Лимиты</b><span>Лимит выводов в день 20, с MAX 40. Когда лимит исчерпан, он обновится завтра.</span></div></li><li><i>💰</i><div><b>Комиссия</b><span>С MAX комиссия на вывод снижена в 2 раза.</span></div></li><li><i>👤</i><div><b>Нужен аккаунт</b><span>Без авторизации вывод недоступен.</span></div></li></ul></details><details class="tile" style="--c:#ff9d00"><summary><div class="ic">⚡</div><div><b>Бонусы</b><span>Усилители и промокоды.</span></div></summary><ul class="perks"><li><i>⚡</i><div><b>200 молний</b><span>Мгновенный заряд за 228 💎.</span></div></li><li><i>🔥</i><div><b>Множители опыта</b><span>Х1.5 за 163 💎, Х2 за 325 💎, Х3 за 195 💎, плюс бесплатный Х3 на час раз в 24 часа.</span></div></li><li><i>🔋</i><div><b>Восстановить батарею</b><span>Полный запас батареи сразу, за 618 💎.</span></div></li><li><i>🎟️</i><div><b>Вкладка «Промокоды»</b><span>Здесь вводятся промокоды. У MAX есть эксклюзивные.</span></div></li></ul></details><details class="tile" style="--c:#1e90ff"><summary><div class="ic">👤</div><div><b>Аккаунт</b><span>Профиль и сохранение прогресса.</span></div></summary><ul class="perks"><li><i>🧾</i><div><b>Три вкладки</b><span>Профиль, Гифты и Мои гифты.</span></div></li><li><i>🔑</i><div><b>Вход и регистрация</b><span>Логин: латиница и цифры, до 16 знаков. Забыли пароль, напишите на giftsrelayer@gmail.com.</span></div></li><li><i>☁️</i><div><b>Облачное сохранение</b><span>Прогресс хранится на аккаунте.</span></div></li><li><i>✈️</i><div><b>Подключение Telegram</b><span>Аккаунт можно привязать к Telegram.</span></div></li><li><i>🎨</i><div><b>Оформление</b><span>Эмодзи-статус рядом с ником, фон профиля, темы MAX.</span></div></li><li><i>🗑️</i><div><b>Удалить данные</b><span>Это заявка на удаление, а не мгновенное удаление.</span></div></li></ul></details><details class="tile" style="--c:#ff4d4d"><summary><div class="ic">📋</div><div><b>Задания</b><span>Выполняй и получай награды.</span></div></summary><ul class="perks"><li><i>👆</i><div><b>Клики</b><span>26 заданий: от 5 до 30 000 кликов.</span></div></li><li><i>💸</i><div><b>Выводы</b><span>10 заданий: от 1 до 50 выводов.</span></div></li><li><i>⚡</i><div><b>Покупки в «Бонусах»</b><span>15 заданий: от 1 до 300 покупок.</span></div></li><li><i>🛒</i><div><b>Покупки в «Магазине»</b><span>12 заданий: от 1 до 150 покупок.</span></div></li><li><i>📈</i><div><b>Награда растёт</b><span>Чем сложнее задание, тем больше награда.</span></div></li></ul></details><details class="tile" style="--c:#8a5cf6"><summary><div class="ic">🛒</div><div><b>Магазин</b><span>Покупки за игровую валюту.</span></div></summary><ul class="perks"><li><i>⬆️</i><div><b>Улучшения</b><span>Прокачка бонуса за клик, например +0,1% или +1%.</span></div></li><li><i>📦</i><div><b>Сундуки</b><span>Отдельная вкладка с сундуками.</span></div></li><li><i>🎒</i><div><b>Предметы</b><span>Особые предметы за игровую валюту.</span></div></li><li><i>🎁</i><div><b>Инвентарь</b><span>Здесь лежит всё, что ты купил.</span></div></li></ul></details><details class="tile" style="--c:#6b7280"><summary><div class="ic">⚙️</div><div><b>Настройки</b><span>Игра под себя.</span></div></summary><ul class="perks"><li><i>🔊</i><div><b>Звук</b><span>Можно полностью отключить все звуки, действует сразу.</span></div></li><li><i>🎨</i><div><b>Визуальные эффекты</b><span>Включение и выключение эффектов оформления.</span></div></li><li><i>💾</i><div><b>Сохранить</b><span>Кнопка «Сохранить» применяет изменения.</span></div></li></ul></details><details class="tile" style="--c:linear-gradient(135deg,#ff4d4d,#ffb300,#2fbf5b,#1e90ff,#a855f7)"><summary><div class="ic">🗺️</div><div><b>Квесты</b><span>Коллекция карточек.</span></div></summary><ul class="perks"><li><i>🃏</i><div><b>Коллекция карточек</b><span>Собирай карточки.</span></div></li><li><i>⏱️</i><div><b>Бесплатные по таймеру</b><span>Карточки выдаются бесплатно через определённое время.</span></div></li><li><i>💰</i><div><b>Кэшбэк</b><span>За прогресс квестов возвращается часть валюты.</span></div></li></ul></details><details class="tile" style="--c:#00c2a8"><summary><div class="ic">📤</div><div><b>Перевод</b><span>Отправить валюту другому игроку.</span></div></summary><ul class="perks"><li><i>💎</i><div><b>Алмазы</b><span>Можно отправить 💎 другому игроку.</span></div></li><li><i>⚡</i><div><b>Опыт</b><span>Можно отправить ⚡ другому игроку.</span></div></li><li><i>⭐</i><div><b>Подарок MAX</b><span>Можно подарить подписку MAX.</span></div></li></ul></details><details class="tile" style="--c:#ffb300"><summary><div class="ic">🎁</div><div><b>Подгоны</b><span>Подарки и особые бонусы.</span></div></summary><ul class="perks"><li><i>📬</i><div><b>Получение подарков</b><span>Здесь появляются подарки и бонусы для тебя.</span></div></li><li><i>🎁</i><div><b>Кнопка «Забрать»</b><span>Забирает обычный подарок.</span></div></li><li><i>⭐</i><div><b>Кнопка «Активировать»</b><span>Включает подаренный MAX.</span></div></li><li><i>🔐</i><div><b>Нужен аккаунт</b><span>Доступ к подгонам только после авторизации.</span></div></li></ul></details><details class="tile" style="--c:#ff6b2b"><summary><div class="ic">🍂</div><div><b>Акции</b><span>Сезонные осенние предложения.</span></div></summary><ul class="perks"><li><i>⚡</i><div><b>MAX на 30 дней</b><span>Скидка 55%: вместо 455 000 ⚡ всего 255 000 ⚡.</span></div></li><li><i>🍃</i><div><b>Осиновый лист</b><span>Эмодзи-статус рядом с ником за 1 650 ⚡.</span></div></li><li><i>🍁</i><div><b>Скидки в магазине</b><span>Осенью улучшения магазина дешевле на 35%.</span></div></li><li><i>⏳</i><div><b>Только осенью</b><span>Предложения ограничены по времени.</span></div></li></ul></details><details class="tile" style="--c:#7c00ff"><summary><div class="ic">🎮</div><div><b>Игры</b><span>Мини-игры в приложении.</span></div></summary><ul class="perks"><li><i>🎰</i><div><b>Классическая рулетка</b><span>Стандартные слоты, 850 ⚡ за спин.</span></div></li><li><i>🔮</i><div><b>Неоновая рулетка</b><span>Чёрные слоты, мега призы, 5 000 ⚡. Главный приз: ДЖЕКПОТ 550 000 ⚡ и 50 спинов.</span></div></li><li><i>🎂</i><div><b>Кондитерская 3D</b><span>Собери торт из 61 ингредиента.</span></div></li><li><i>🎃</i><div><b>Сундучелла</b><span>Рулетка сундуков, 2 000 ⚡ за спин.</span></div></li><li><i>🍺</i><div><b>Заряд бодрости</b><span>Награды 🍺 и 🧩, 2 000 ⚡ за спин.</span></div></li></ul></details><details class="tile" style="--c:linear-gradient(135deg,#ff2bd6,#3a2bff)"><summary><div class="ic">🪩</div><div><b>Disco Quest</b><span>Диско-башня наград.</span></div></summary><ul class="perks"><li><i>🏢</i><div><b>30 этажей</b><span>На каждом этаже награда: молнии, алмазы или сундук.</span></div></li><li><i>💠</i><div><b>Цена этажа растёт</b><span>От 5 💠 на первых этажах до 30 💠 на последних.</span></div></li><li><i>📦</i><div><b>Три вида сундуков</b><span>Оранжевый: 120 💎 и 80 ⚡. Красный: 300 💎 и 180 ⚡. Зелёный: 600 💎, 350 ⚡ и +1% к бонусу.</span></div></li><li><i>🎧</i><div><b>Планы KOSMOS и Witchy</b><span>Дают больше наград на этажах.</span></div></li></ul></details></div><div class="grp">Батарея</div>
+    <p class="note">Пока батарея не пуста, можно кликать.</p>
+    <div class="stats">
+      <div class="stat"><b>−1</b><span>за каждый тап</span></div>
+      <div class="stat"><b>500 · +1 / 5 сек</b><span>без MAX</span></div>
+      <div class="stat"><b>2 000 · +3 / 5 сек</b><span>с MAX</span></div>
+    </div>
+
+    <div class="grp">Лиги</div>
+    <p class="note">Лига зависит от количества кликов. Каждый новый уровень приносит 💎: от 100 на первом уровне до 1 500 на высоких.</p>
+    <div class="lg"><i>Бронзовая</i><small>ур. 1–5 · 0 – 600 кликов</small></div><div class="lg"><i>Серебряная</i><small>ур. 6–10 · 601 – 2 000 кликов</small></div><div class="lg"><i>Золотая</i><small>ур. 11–15 · 2 001 – 5 000 кликов</small></div><div class="lg"><i>Сапфировая</i><small>ур. 16–20 · 5 001 – 15 000 кликов</small></div><div class="lg"><i>Рубиновая</i><small>ур. 21–25 · 15 001 – 70 000 кликов</small></div><div class="lg"><i>Изумрудная</i><small>ур. 26–30 · 70 001 – 145 000 кликов</small></div><div class="lg"><i>Алмазная</i><small>ур. 31–35 · 145 001 – 280 000 кликов</small></div><div class="lg"><i>Лига Чемпионов</i><small>ур. 36–40 · 280 001 – 500 000 кликов</small></div>
+  </section>
+
+  <section id="rules">
+    <h2>Правила использования</h2>
+    <p class="sub">Коротко о том, как устроена игра</p>
+    <div class="pt"><div class="n">1</div><div class="t"><p>Мы не берём плату за какие-либо действия в игре. Всё делается только вокруг внутриигровой валюты.</p></div></div>
+    <div class="pt"><div class="n">2</div><div class="t"><p>Игра не носит коммерческого смысла и не создана, чтобы на ней заработать. Это просто развлекательная игра, а не казино.</p></div></div>
+    <div class="pt"><div class="n">3</div><div class="t"><p>Владелец может отменить вывод вам или кому-нибудь другому в любой момент.</p><p class="warn">Владелец не будет отказывать вам в заявке просто так.</p></div></div>
+    <div class="pt"><div class="n">4</div><div class="t"><p>Ни в коем случае не используйте автокликеры, взломщики, подменщики данных и другие утилиты для взлома или фарма валюты.</p><p class="warn">Иначе ваш аккаунт будет заблокирован навсегда.</p></div></div>
+    <div class="pt"><div class="n">5</div><div class="t"><p>Вывод обрабатывается не сразу, понадобится время.</p><p class="warn">Чем больше пишете владельцу про вывод, тем дольше ждёте именно свой вывод.</p></div></div>
+    <div class="pt"><div class="n">6</div><div class="t"><p>Играть можно как в Mini App в Telegram (<a class="blue" href="https://t.me/diamond_clicker_off_bot" target="_blank" rel="noopener">@diamond_clicker_off_bot</a>), так и на сайте в любом браузере.</p></div></div>
+  </section>
+
+  <section id="privacy">
+    <h2>Политика конфиденциальности</h2>
+    <p class="sub">Какие данные мы просим и как их защищаем</p>
+    <div class="pt"><div class="n">1</div><div class="t">
+      <p>При входе в нашу игру <a class="blue" href="https://ruslan1055-lang.github.io/Diamond-clicker-/" target="_blank" rel="noopener">Diamond clicker</a> для доступа к функциям «ежедневные награды», «вывод», «обмен на прграм», «квесты», «подгоны», «получение подгонов» и онлайн-режимам нужна авторизация в приложении.</p>
+      <div class="tut"><b>Туториал:</b> Аккаунт → Регистрация → введите логин (только латиница и цифры, символы, не более 16 знаков) и пароль.</div>
+      <p class="warn">Если вы забыли пароль, обратитесь по адресу <a class="blue" href="mailto:giftsrelayer@gmail.com">giftsrelayer@gmail.com</a> для восстановления или сброса пароля.</p>
+    </div></div>
+    <div class="pt"><div class="n">2</div><div class="t">
+      <p class="warn">Мы не просим лишних данных.</p>
+      <p>Для вывода на Duolingo нужны только ваш логин от Duolingo и ID Duolingo, больше никакие данные нам не нужны. Повторно вводить данные не надо, либо можно ввести любые неправильные: система уже запомнила вас.</p>
+    </div></div>
+    <div class="pt"><div class="n">3</div><div class="t">
+      <p class="warn">Мы не передаём статистику вашего аккаунта, статистику использования, личные данные и IP-адрес третьим лицам.</p>
+      <p>Эти данные не знает даже разработчик. Ваша конфиденциальность для нас важнее всего.</p>
+    </div></div>
+    <div class="pt"><div class="n">4</div><div class="t">
+      <p>Категорически запрещено создавать твинки (вторые аккаунты на одном устройстве).</p>
+      <p>В первый раз мы предупредим и удалим ваш твинк. Во второй раз может последовать бан на неопределённое время или отказ в выводах.</p>
+    </div></div>
+    <div class="pt"><div class="n">5</div><div class="t">
+      <p class="warn">При нажатии на «Удалить данные» вы НЕ УДАЛЯЕТЕ СВОИ ДАННЫЕ НАПРЯМУЮ, а всего лишь подаёте заявку на их удаление.</p>
+      <p class="caps">В целях конфиденциальности и безопасности мы не делаем пользователям такие функции.</p>
+    </div></div>
+    <div class="pt"><div class="n">6</div><div class="t">
+      <p>В онлайн-режимах никто не должен терпеть издевательства в чате. Если вас обижают, присылайте скриншоты, мы разберёмся.</p>
+    </div></div>
+    <div class="pt"><div class="n">7</div><div class="t">
+      <p class="caps">Нельзя ни в коем случае использовать в качестве логина матерные слова, названия наркотиков, алкоголя, любых табачных изделий, названия партий, террористических группировок или лозунги!</p>
+      <p class="warn">Иначе мы будем вынуждены удалить ваш аккаунт.</p>
+    </div></div>
+    <div class="pt"><div class="n">8</div><div class="t">
+      <p>Не заходите в чужие аккаунты, даже под предлогом «просто посмотреть». В один аккаунт нельзя заходить двум и более людям.</p>
+    </div></div>
+  </section>
+
+  <section id="contacts">
+    <h2>Контакты</h2>
+    <p class="sub">Пишите по делу, так ответим быстрее</p>
+    <div class="contact">
+      <div><b>Владелец</b><small>Только по делу</small></div>
+      <a class="mi-btn" href="https://t.me/Aleksandr51360" target="_blank" rel="noopener">@Aleksandr51360</a>
+    </div>
+    <div class="contact">
+      <div><b>Тех. поддержка (администрация)</b><small>По вопросам вывода, туториала и любым другим вопросам в рамках разумного и дозволенного</small></div>
+      <a class="mi-btn" href="mailto:giftsrelayer@gmail.com">giftsrelayer@gmail.com</a>
+    </div>
+  </section>
+</main>
+
+<footer></footer>
+
+<script>
+const burger=document.getElementById('burger'),menu=document.getElementById('menu'),overlay=document.getElementById('overlay');
+function toggle(open){
+  menu.classList.toggle('open',open);overlay.classList.toggle('open',open);
+  burger.setAttribute('aria-expanded',open);
+  burger.setAttribute('aria-label',open?'Закрыть меню':'Открыть меню');
+}
+burger.addEventListener('click',()=>toggle(!menu.classList.contains('open')));
+overlay.addEventListener('click',()=>toggle(false));
+const hero=document.querySelector('.hero'),sections=document.querySelectorAll('main section'),links=menu.querySelectorAll('a');
+function show(id){
+  sections.forEach(s=>s.classList.toggle('show',s.id===id));
+  links.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+id));
+  hero.classList.toggle('hidden',!!id);
+  window.scrollTo({top:0});
+}
+sections.forEach(s=>{
+  const b=document.createElement('button');
+  b.className='mi-btn ghost back';b.textContent='Закрыть';
+  b.addEventListener('click',()=>show(null));
+  s.appendChild(b);
+});
+links.forEach(a=>a.addEventListener('click',e=>{
+  e.preventDefault();
+  show(a.getAttribute('href').slice(1));
+  toggle(false);
+}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')toggle(false)});
+</script>
+</body>
+</html>
